@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Notes
+from .models import Quests
 
-class NoteSerializer(serializers.ModelSerializer):
+class QuestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Notes
+        model = Quests
         fields = ('id', 'title', 'content')

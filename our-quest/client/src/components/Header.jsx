@@ -1,7 +1,7 @@
 function Header() {
     return (
       <header>
-        <h1>Notes</h1>
+        <h1>Our Quest</h1>
       </header>
     );
   }

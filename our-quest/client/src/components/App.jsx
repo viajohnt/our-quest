@@ -1,4 +1,4 @@
-import Note from "./Notes"
+import Note from "./Quests"
 import Header from "./Header"
 import Footer from "./Footer"
 
