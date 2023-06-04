@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import axios from "axios";
-import List from "./List"
+import QuestList from "./QuestList"
+import { Button } from '@mui/material'
 
 
 function Quest() {
@@ -80,12 +81,11 @@ function Quest() {
         <form className="create-note">
           {isExpanded && <input onChange={handleChange} text={formQuest.title} name="title" placeholder="Title" value={formQuest.title} />}
           <textarea onClick={QuestShow} onChange={handleChange} name="content" placeholder="Make a quest..." rows={rows} value={formQuest.content} />
-          {isExpanded && <button onClick={createQuest}>
-      
-                        </button>}
+          {isExpanded && (<Button className="submit-button translate-x-[25rem] translate-y-[-1rem]" variant="contained" color="primary" onClick={createQuest}>+</Button>)}
         </form>
 
-        { quests && quests.map(quest => <List
+        { quests && quests.map(quest => 
+        <QuestList
         key={quest.id}
         id={quest.id}
         title={quest.title}
