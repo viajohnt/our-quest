@@ -2,7 +2,7 @@ import React from 'react'
 
 function ErrorPage() {
   return (
-    <div className='translate-y-[20rem] translate-x-[23rem] text-6xl'>FUCK! PAGE NOT FOUND</div>
+    <div className='text-center align-text-bottom text-6xl'>FUCK! PAGE NOT FOUND</div>
   )
 }
 

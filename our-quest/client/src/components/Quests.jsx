@@ -1,102 +1,133 @@
-import {useState, useEffect} from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react"
 import QuestList from "./QuestList"
-import { Button } from '@mui/material'
-
+import useUserStore from "../hooks/UserStore"
 
 function Quest() {
-    const [isExpanded, setExpanded]= useState(false)
-    const [rows, setRows]= useState(1)
+  const [quests, setQuests] = useState([])
+  const [formQuest, setFormQuest] = useState({
+    title: "",
+    content: ""
+  });
+  const { user,setUser } = useUserStore()
 
-    const [quests , setNewQuests] = useState(null)
-    const [formQuest, setFormQuest] = useState({
-      title: "",
-      content: ""
+  useEffect(() => {
+    getQuests()
+    getUser()
+  }, [])
+
+  function getUser() {
+    fetch("/user_info/")
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data)
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error)
+      })
+  }
+  
+  function getQuests() {
+    fetch("/quests/")
+      .then((response) => response.json())
+      .then((data) => {
+        setQuests(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching quests:", error)
+      });
+  }
+
+  function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')
+    return cookieValue ? cookieValue.pop() : ''
+  }
+  
+  function createQuest(event) {
+    event.preventDefault();
+    const csrftoken = getCookie('csrftoken');
+  
+    fetch("/quests/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken
+      },
+      body: JSON.stringify({
+        title: formQuest.title,
+        content: formQuest.content,
+        creator: user.id
+      })
     })
-
-    useEffect(() => {
-      getQuests()
-        } ,[])
-
-    function getQuests() {
-      axios({
-          method: "GET",
-          url:"/quests/",
-        }).then((response)=>{
-          const data = response.data
-          setNewQuests(data)
-        }).catch((error) => {
-          if (error.response) {
-            console.log(error.response);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-            }
-        })}
-
-    function createQuest(event) {
-        axios({
-          method: "POST",
-          url:"/quests/",
-          data:{
-            title: formQuest.title,
-            content: formQuest.content
-           }
-        })
-        .then((response) => {
-          getQuests()
-        })
-
-        setFormQuest(({
+      .then(() => {
+        getQuests();
+        setFormQuest({
           title: "",
-          content: ""}))
-        setExpanded(false)
-        event.preventDefault()
-    }
+          content: ""
+        });
+      })
+      .catch((error) => {
+        console.error("Error creating quest:", error)
+      })
+  }
 
-    function DeleteQuest(id) {
-        axios({
-          method: "DELETE",
-          url:`/quests/${id}/`,
-        })
-        .then((response) => {
-          getQuests()
-        })
-    }
-
-    function handleChange(event) { 
-        const {value, name} = event.target
-        setFormQuest(prevQuest => ({
-            ...prevQuest, [name]: value})
-        )}
-
-    function QuestShow(){
-        setExpanded(true)
-        setRows(3)
+  function deleteQuest(id) {
+    const csrftoken = getCookie('csrftoken')
+  
+    fetch(`/quests/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": csrftoken
       }
+    })
+      .then(() => {
+        getQuests()
+      })
+      .catch((error) => {
+        console.error("Error deleting quest:", error)
+      })
+  }
+
+  function handleChange(event) {
+    const { value, name } = event.target
+    setFormQuest(prevQuest => ({
+      ...prevQuest,
+      [name]: value
+    }))
+  }
 
   return (
-
-     <div className=''>
-
-        <form className="create-note">
-          {isExpanded && <input onChange={handleChange} text={formQuest.title} name="title" placeholder="Title" value={formQuest.title} />}
-          <textarea onClick={QuestShow} onChange={handleChange} name="content" placeholder="Make a quest..." rows={rows} value={formQuest.content} />
-          {isExpanded && (<Button className="submit-button translate-x-[25rem] translate-y-[-1rem]" variant="contained" color="primary" onClick={createQuest}>+</Button>)}
-        </form>
-
-        { quests && quests.map(quest => 
-        <QuestList
-        key={quest.id}
-        id={quest.id}
-        title={quest.title}
-        content={quest.content} 
-        deletion ={DeleteQuest}
+    <div className="">
+      <form className="create-note" onSubmit={createQuest}>
+        <input
+          onChange={handleChange}
+          name="title"
+          placeholder="Title"
+          value={formQuest.title}
         />
-        )}
+        <input
+          onChange={handleChange}
+          name="content"
+          placeholder="Make a quest..."
+          value={formQuest.content}
+        />
+        <button
+          className="submit-button"
+          type="submit"
+        >+</button>
+      </form>
 
+      {quests.map((quest) => (
+        <QuestList
+          key={quest.id}
+          id={quest.id}
+          title={quest.title}
+          content={quest.content}
+          deletion={deleteQuest}
+          creator={quest.creator}
+        />
+      ))}
     </div>
-
   );
 }
 
-export default Quest;
+export default Quest
