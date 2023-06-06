@@ -15,8 +15,8 @@ function Quest() {
     getUser()
   }, [])
 
-  function getUser() {
-    fetch("/user_info/")
+  function getUser(userId) {
+    fetch(`/users/${userId}/`)
       .then((response) => response.json())
       .then((data) => {
         setUser(data)

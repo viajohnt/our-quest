@@ -7,6 +7,7 @@ import Header from "./Header"
 import Footer from "./Footer"
 import Home from "./Home"
 import LoginForm from './LoginForm'
+import SignUpForm from './SignUpForm'
 
 export default function App() {
 
@@ -28,6 +29,7 @@ export default function App() {
         <Route index element ={<Home />}/>
         <Route path="/quest" element ={<Quest />}/>
         <Route path="/login" element ={<LoginForm />}/>
+        <Route path="/signup" element ={<SignUpForm />}/>
         <Route path="*" element={<ErrorPage/>}/>
       </Route>
     )

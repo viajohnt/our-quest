@@ -23,7 +23,7 @@ const LogoutButton = () => {
   };
 
   return (
-    user ? <button onClick={handleLogout}>Logout</button> : null
+    user ? <button onClick={handleLogout} className='font-bold font-dm-sans text-white'>Logout</button> : null
   );
 };
 

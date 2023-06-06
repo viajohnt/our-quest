@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import QuestSerializer
+from .serializers import QuestSerializer, UserSerializer
 from .models import Quest
 
 
@@ -67,6 +67,9 @@ def login_view(request):
 def signup_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
+    email = request.data.get('email')
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
 
     if not username or not password:
         return Response({'message': 'Username and password are required.'}, status=400)
@@ -74,9 +77,10 @@ def signup_view(request):
     if User.objects.filter(username=username).exists():
         return Response({'message': 'User with this username already exists.'}, status=400)
 
-    user = User.objects.create_user(username=username, email=username, password=password) # using username as email here.
+    user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password) 
     user.save()
     return Response({'message': 'Signup successful.'})
+
 
 
 @api_view(['POST'])
@@ -85,12 +89,13 @@ def logout_view(request):
     return Response({'message': 'Logout successful.'})
 
 @api_view(['GET'])
-@login_required
-def get_user_info(request):
-    user = request.user
-    return Response({
-        'id': user.id,
-        'username': user.username,
-        'email': user.email
-    })
+def get_all_users_info(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
 
+@api_view(['GET'])
+def get_user_info(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
