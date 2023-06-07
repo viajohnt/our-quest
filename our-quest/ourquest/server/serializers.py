@@ -2,9 +2,12 @@ from rest_framework import serializers
 from .models import Quest, User, Topic, Comment, Profile
 
 class TopicSerializer(serializers.ModelSerializer):
+    captain = serializers.ReadOnlyField(source='captain.username')
+
     class Meta:
         model = Topic
         fields = '__all__'
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +15,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(allow_null=True, required=False)
     class Meta:
         model = Profile
         fields = '__all__'

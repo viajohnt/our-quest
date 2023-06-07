@@ -30,27 +30,27 @@ function Header() {
   };
 
   return (
-    <header className="main-header bg-gray-700 flex justify-between items-center font-dm-sans shadow-2xl">
+    <header className="main-header bg-dark-purp flex justify-between items-center font-dm-sans shadow-2xl">
       <div>
         <Link to="/"> 
           <img className="main-logo max-h-[6rem] pl-[3rem] pt-5 pb-5" src={logo} alt="logo" />
         </Link>
       </div>
       <div className="relative flex items-center mr-10">
-          <img className="user-image max-h-[3rem] mr-3" src={userImg} alt="User" />
         {user ? (
           <>
-            <p className="font-bold font-dm-sans text-white">@{user.username}</p>
+            <img className="user-image max-h-[3rem] rounded-full mr-3" src={user?.profile?.avatar === "/avatar.svg" ? userImg : user?.profile?.avatar} alt="User" />
+            <p className="font-bold font-dm-sans text-blue-200">@{user.username}</p>
             <button onClick={() => setShowDropdown(!showDropdown)} className="font-bold ml-3">
               <img src={dropdown} alt="dropdown" className="h-5 w-5"/>
             </button>
             {showDropdown && (
-              <div className="absolute right-[-10] mt-[10rem] w-48 bg-gray-600 rounded-md overflow-hidden shadow-2xl z-10">
-                <Link to="/settings" className="flex items-center px-[3.5rem] py-2 text-sm text-white hover:bg-indigo-500 hover:text-white">
+              <div className="absolute mt-[9rem] translate-x-[-1rem] w-48 bg-light-purp rounded-md overflow-hidden shadow-2xl z-10">
+                <Link to="/settings" className="flex items-center px-[3.5rem] py-2 text-sm text-white hover:bg-dark-purp hover:text-white">
                   <img src={gear} alt="settings" className="h-5 w-5 mr-2"/>
                   Settings
                 </Link>
-                <button onClick={handleLogout} className="flex items-center w-full text-left px-[4rem] py-2 text-sm text-white hover:bg-indigo-500">
+                <button onClick={handleLogout} className="flex items-center w-full text-left px-[4rem] py-2 text-sm text-white hover:bg-dark-purp">
                   <img src={door} alt="logout" className="h-4 w-4 mr-2"/>
                   Logout
                 </button>

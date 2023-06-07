@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import QuestSerializer, UserSerializer, TopicSerializer, CommentSerializer, ProfileSerializer, serializers
+from .serializers import QuestSerializer, UserSerializer, TopicSerializer, CommentSerializer, ProfileSerializer
 from .models import Quest, Topic, Comment, Profile
 
 
@@ -53,9 +53,21 @@ def topic(request):
     elif request.method == 'POST':
         serializer = TopicSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(captain=request.user)  # Add the creator here
+            serializer.save()  # Remove the captain argument
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def topic_detail(request, pk):
+    try:
+        topic = Topic.objects.get(pk=pk)
+    except Topic.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = TopicSerializer(topic)
+        return Response(serializer.data)
 
 
     
@@ -73,19 +85,38 @@ def comment(request):
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET, POST'])
-def profile(request):
+@api_view(['GET', 'POST'])
+def profile_list(request):
     if request.method == 'GET':
-        profile = Profile.objects.all()
-        serializer = ProfileSerializer(profile, many=True)
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
         serializer = ProfileSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(captain=request.user)
-            return Response(status=status.HTTP_201_CREATED)
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PATCH'])
+def profile_detail(request, pk):
+    profile = get_object_or_404(Profile, user__pk=pk)
+
+    if request.method == 'GET':
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+    elif request.method == 'PATCH':
+        data = request.data.dict()
+        data['avatar'] = request.FILES.get('avatar')
+        serializer = ProfileSerializer(profile, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['POST'])
 def login_view(request):
@@ -138,11 +169,3 @@ def get_user_info(request, pk):
     user = get_object_or_404(User, pk=pk)
     serializer = UserSerializer(user)
     return Response(serializer.data)
-
-# @api_view(['GET'])
-# def test_user_serializer(request):
-#     user = User.objects.get(username='jawn')  # Replace 'jawn' with a valid username
-#     serializer = UserSerializer(user)
-#     return Response(serializer.data)
-
-
