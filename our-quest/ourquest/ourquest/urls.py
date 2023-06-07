@@ -1,27 +1,26 @@
-"""
-URL configuration for ourquest project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
-from server.views import index, quest, quest_detail
+from django.conf import settings
+from django.conf.urls.static import static
+from server.views import index, quest, topic, comment, profile_list, quest_detail, login_view, signup_view, logout_view, get_user_info, get_all_users_info, profile_detail, topic_detail
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", index, name="index"),
     path("quests/", quest, name="quest"),
-    path("quests/<int:pk>/", quest_detail, name="detail"),
+    path("quests/<int:pk>/", quest_detail, name="detail"), 
+    path("login/", login_view, name="login"),
+    path('signup/', signup_view, name='signup'),
+    path('logout/', logout_view, name='logout'),
+    path('users/' , get_all_users_info, name='users'),
+    path('users/<int:pk>/', get_user_info, name='user'),
+    path("topics/", topic, name="topic"),
+    path("topics/<int:pk>/", topic_detail, name="topic_detail"),
+    path("comments/", comment, name="comment"),
+    path("profile/", profile_list, name="profile"),
+    path('profile/<int:pk>/', profile_detail, name='profile_detail'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
