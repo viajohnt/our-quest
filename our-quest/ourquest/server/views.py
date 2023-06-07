@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import QuestSerializer, UserSerializer
-from .models import Quest
+from .serializers import QuestSerializer, UserSerializer, TopicSerializer, CommentSerializer, ProfileSerializer, serializers
+from .models import Quest, Topic, Comment, Profile
 
 
 # Create your views here.
@@ -24,10 +24,9 @@ def quest(request):
     elif request.method == 'POST':
         serializer = QuestSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(creator=request.user)  # Add the creator here
-            return Response(status=status.HTTP_201_CREATED)
+            quest = serializer.save(captain=request.user)
+            return Response(QuestSerializer(quest).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET', 'DELETE'])
 def quest_detail(request, pk):
@@ -44,6 +43,50 @@ def quest_detail(request, pk):
         quest.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+@api_view(['GET', 'POST'])
+def topic(request):
+    if request.method == 'GET':
+        topic = Topic.objects.all()
+        serializer = TopicSerializer(topic, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = TopicSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(captain=request.user)  # Add the creator here
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    
+@api_view(['GET, POST'])
+def comment(request):
+    if request.method == 'GET':
+        comment = Comment.objects.all()
+        serializer = CommentSerializer(comment, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(captain=request.user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET, POST'])
+def profile(request):
+    if request.method == 'GET':
+        profile = Profile.objects.all()
+        serializer = ProfileSerializer(profile, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(captain=request.user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['POST'])
 def login_view(request):
     username = request.data.get('username')
@@ -52,16 +95,13 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
+        serializer = UserSerializer(user)
         return Response({
             'message': 'Login successful.',
-            'user': {
-                'username': user.username,
-                'email': user.email
-            }
+            'user': serializer.data
         })
     else:
         return Response({'message': 'Invalid credentials.'}, status=401)
-
 
 @api_view(['POST'])
 def signup_view(request):
@@ -81,8 +121,6 @@ def signup_view(request):
     user.save()
     return Response({'message': 'Signup successful.'})
 
-
-
 @api_view(['POST'])
 def logout_view(request):
     logout(request)
@@ -91,6 +129,7 @@ def logout_view(request):
 @api_view(['GET'])
 def get_all_users_info(request):
     users = User.objects.all()
+    print(request.user.id)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
@@ -99,3 +138,11 @@ def get_user_info(request, pk):
     user = get_object_or_404(User, pk=pk)
     serializer = UserSerializer(user)
     return Response(serializer.data)
+
+# @api_view(['GET'])
+# def test_user_serializer(request):
+#     user = User.objects.get(username='jawn')  # Replace 'jawn' with a valid username
+#     serializer = UserSerializer(user)
+#     return Response(serializer.data)
+
+

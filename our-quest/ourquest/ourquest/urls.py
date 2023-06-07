@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from server.views import index, quest, quest_detail, login_view, signup_view, logout_view, get_user_info, get_all_users_info
+from server.views import index, quest, topic, comment, profile, quest_detail, login_view, signup_view, logout_view, get_user_info, get_all_users_info
 
 
 urlpatterns = [
@@ -13,4 +13,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('users/' , get_all_users_info, name='users'),
     path('users/<int:pk>/', get_user_info, name='user'),
+    path("topics/", topic, name="topic"),
+    path("comments/", comment, name="comment"),
+    path("profile/", profile, name="profile"),
 ]

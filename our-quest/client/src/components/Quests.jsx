@@ -6,14 +6,18 @@ function Quest() {
   const [quests, setQuests] = useState([])
   const [formQuest, setFormQuest] = useState({
     title: "",
-    content: ""
-  });
+    content: "",
+    topic: "",
+    public: false 
+});
   const { user,setUser } = useUserStore()
 
   useEffect(() => {
     getQuests()
-    getUser()
-  }, [])
+    if (user && user.id) {
+        getUser(user.id)
+    }
+}, [])
 
   function getUser(userId) {
     fetch(`/users/${userId}/`)
@@ -45,7 +49,7 @@ function Quest() {
   function createQuest(event) {
     event.preventDefault();
     const csrftoken = getCookie('csrftoken');
-  
+
     fetch("/quests/", {
       method: "POST",
       headers: {
@@ -55,20 +59,24 @@ function Quest() {
       body: JSON.stringify({
         title: formQuest.title,
         content: formQuest.content,
-        creator: user.id
-      })
+        topic: parseInt(formQuest.topic), 
+        public: formQuest.public === "true",
+        participants: [user.id],  // Add this line
+      }),
     })
-      .then(() => {
+    .then(() => {
         getQuests();
         setFormQuest({
           title: "",
-          content: ""
+          content: "",
+          topic: "", 
+          public: false 
         });
-      })
-      .catch((error) => {
-        console.error("Error creating quest:", error)
-      })
-  }
+    })
+    .catch((error) => {
+      console.error("Error creating quest:", error)
+    })
+}
 
   function deleteQuest(id) {
     const csrftoken = getCookie('csrftoken')
@@ -88,34 +96,46 @@ function Quest() {
   }
 
   function handleChange(event) {
-    const { value, name } = event.target
-    setFormQuest(prevQuest => ({
-      ...prevQuest,
-      [name]: value
-    }))
-  }
+    const { name, value, type, checked } = event.target;
+    type === "checkbox" 
+        ? setFormQuest(prevQuest => ({...prevQuest, [name]: checked}))
+        : setFormQuest(prevQuest => ({...prevQuest, [name]: value}));
+}
 
   return (
     <div className="">
-      <form className="create-note" onSubmit={createQuest}>
-        <input
-          onChange={handleChange}
-          name="title"
-          placeholder="Title"
-          value={formQuest.title}
-        />
-        <input
-          onChange={handleChange}
-          name="content"
-          placeholder="Make a quest..."
-          value={formQuest.content}
-        />
-        <button
-          className="submit-button"
-          type="submit"
-        >+</button>
-      </form>
-
+<form className="create-note" onSubmit={createQuest}>
+    <input
+      onChange={handleChange}
+      name="title"
+      placeholder="Title"
+      value={formQuest.title}
+    />
+    <input
+      onChange={handleChange}
+      name="content"
+      placeholder="Make a quest..."
+      value={formQuest.content}
+    />
+    <input
+      onChange={handleChange}
+      name="topic"
+      placeholder="Topic ID"
+      value={formQuest.topic}
+      type="number"  // Add this line
+    />
+    <input
+      type="checkbox"
+      onChange={handleChange}
+      name="public"
+      checked={formQuest.public}
+    />
+    <label htmlFor="public">Public</label>
+    <button
+      className="submit-button"
+      type="submit"
+    >+</button>
+</form>
       {quests.map((quest) => (
         <QuestList
           key={quest.id}
@@ -123,7 +143,8 @@ function Quest() {
           title={quest.title}
           content={quest.content}
           deletion={deleteQuest}
-          creator={quest.creator}
+          topic={quest.topic}
+          captain={quest.captain}
         />
       ))}
     </div>

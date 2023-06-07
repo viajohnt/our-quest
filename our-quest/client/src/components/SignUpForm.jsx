@@ -43,10 +43,10 @@ const SignupForm = () => {
 };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-500 font-dm-sans pt-10">
+    <div className="flex items-center justify-center h-screen bg-gray-500 font-dm-sans pt-[8rem]">
       <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
-        <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg">SIGN UP</div> 
-        <p className="text-xl text-center text-white mb-6 pt-3 pb-10">Looking for a quest?</p> 
+        <div className="text-3xl text-center text-white rounded-t-lg">SIGN UP</div> 
+        <p className="text-xl text-center text-white pt-3 pb-10">Looking for a quest?</p> 
         <form onSubmit={handleSubmit} className="flex flex-col ">
           <div className="flex space-x-4 mb-4">
             <input
