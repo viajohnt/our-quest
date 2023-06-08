@@ -91,23 +91,23 @@ function Settings() {
 
   console.log(userData);
   return (
-    <div className="flex items-center justify-center h-screen font-dm-sans pt-10  bg-darker-purp ">
+    <div className="flex items-center justify-center h-screen bg-gray-500 font-dm-sans pt-10">
       <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
         <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">Settings</div>
         <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex flex-col">
           <label className="text-white">Profile Picture</label>
-          <input type="file" name="avatar" onChange={handleInputChange} className="input mb-4 rounded-sm p-3 bg-light-purp text-white" />
+          <input type="file" name="avatar" onChange={handleInputChange} className="input mb-4 rounded-sm p-3 bg-white" />
           <label className="text-white">Bio</label>
           <textarea
             name="bio"
             value={userData.bio}
             onChange={handleInputChange}
             rows={4}
-            className="input mb-4 rounded-sm p-3 bg-light-purp text-white"
+            className="input mb-4 rounded-sm p-3 bg-white"
           ></textarea>
           <button
             type="submit"
-            className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-400 mb-4 max-w-[18rem] translate-x-[4rem]"
+            className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
           >
             Save Changes
           </button>

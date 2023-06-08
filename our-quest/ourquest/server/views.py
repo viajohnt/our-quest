@@ -9,7 +9,7 @@ from .serializers import QuestSerializer, UserSerializer, TopicSerializer, Comme
 from .models import Quest, Topic, Comment, Profile
 
 
-
+# Create your views here.
 def index(request):
     context = { }
     return render(request, "index.html", context)
@@ -53,7 +53,7 @@ def topic(request):
     elif request.method == 'POST':
         serializer = TopicSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  
+            serializer.save()  # Remove the captain argument
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

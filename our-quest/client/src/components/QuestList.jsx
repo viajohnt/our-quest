@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function QuestList({ quest, deletion }) {
   const [topicData, setTopicData] = useState(null);
@@ -7,8 +8,8 @@ function QuestList({ quest, deletion }) {
     fetch(`/topics/${id}/`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.name)
-        setTopicData(data)
+        console.log(data.name);
+        setTopicData(data);
       });
   };
 
@@ -27,7 +28,9 @@ function QuestList({ quest, deletion }) {
           />
           <h2 className="text-light-blue">Captain @{quest.captain}</h2>
         </div>
-        <h2 className="mt-2 mb-4 text-white">{quest.title}</h2>
+        <Link to={`/quest/${quest.id}`}>
+          <h2 className="mt-2 mb-4 text-white">{quest.title}</h2>
+        </Link>
         <div className="flex space-x-2 mb-4">
           {quest.participants.slice(0, 3).map((participant, index) => (
             <img

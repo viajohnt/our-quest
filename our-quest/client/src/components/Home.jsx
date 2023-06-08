@@ -75,37 +75,39 @@ function Home() {
   const filteredQuests = quests
     .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    return (
-      <div className="bg-darker-purp min-h-screen overflow-x-hidden">
-        <div className="flex justify-center">
-          <input
-            type="text"
-            placeholder="Search quests..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="mt-5 mb-5 bg-light-purp w-[20rem] h-12 text-lg rounded-md text-white focus:outline-none pl-4"
-          />
-        </div>
-        <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10 ">
-          <div>
-            <p className="text-2xl text-white">Quests</p>
-            <p className="text-blue-300">Available Quests: {quests.length}</p>
-          </div>
-          <Link to="/create_quest" className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400">Create Quest</Link>
-        </div>
-        <div className="grid grid-rows-8 gap-4 justify-items-center">
-          {filteredQuests.length > 0 ? (
-            filteredQuests.map((quest) => (
-              <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
-            ))
-          ) : (
-            <div className="flex justify-center items-center text-white text-xl">
-              No quests found...
-            </div>
-          )}
-        </div>
+  return (
+    <div className="bg-darker-purp min-h-screen overflow-x-hidden">
+      <div className="flex justify-center">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="mt-5 mb-5 bg-light-purp w-[20rem] h-12 text-lg rounded-md text-white focus:outline-none pl-4"
+        />
       </div>
-    );
+      <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10">
+        <div>
+          <p className="text-2xl text-white">Quests</p>
+          <p className="text-blue-300">Available Quests: {quests.length}</p>
+        </div>
+        <Link to="/create_quest" className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400">Create Quest</Link>
+      </div>
+      <div className="grid grid-rows-8 gap-4 justify-items-center">
+        {filteredQuests.length > 0 ? (
+          filteredQuests.map((quest) => (
+            <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
+          ))
+        ) : (
+          <div className="flex justify-center items-center text-white text-xl">
+            No quests found...
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
+
+
 
 export default Home;

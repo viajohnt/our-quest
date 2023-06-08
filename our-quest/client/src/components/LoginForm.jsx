@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import useUserStore from '../hooks/UserStore';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; 
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const { user, setUser } = useUserStore();
   const navigate = useNavigate();
 
@@ -39,7 +38,7 @@ const LoginForm = () => {
         setUser(data.user);
         navigate('/');
       } else {
-        setError('Invalid username or password');
+        console.log('Login failed');
       }
     } catch (error) {
       console.log(error);
@@ -51,19 +50,18 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen font-dm-sans pt-10 bg-darker-purp min-h-screen overflow-x-hidden">
-      <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-5rem]">
-        <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">LOGIN</div>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <p className="text-xl text-center text-white mb-3 pt-3 pb-10">Find your next quest</p>
-        <form onSubmit={handleSubmit} className="flex flex-col">
+    <div className="flex items-center justify-center h-screen bg-gray-500 font-dm-sans pt-10 ">
+      <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
+        <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">LOGIN</div> 
+        <p className="text-xl text-center text-white mb-3 pt-3 pb-10">Find your next quest</p> 
+        <form onSubmit={handleSubmit} className="flex flex-col ">
           <input
             type="text"
             value={username}
             onChange={event => setUsername(event.target.value)}
             placeholder="Username"
             required
-            className="input mb-4 rounded-sm p-3 bg-white focus:outline-none max-w-[18rem] translate-x-[4rem]"
+            className="input mb-4 rounded-sm p-3 bg-white" 
           />
           <input
             type="password"
@@ -71,22 +69,16 @@ const LoginForm = () => {
             onChange={event => setPassword(event.target.value)}
             placeholder="Password"
             required
-            className="input mb-10 rounded-sm p-3 bg-white focus:outline-none max-w-[18rem] translate-x-[4rem]"
+            className="input mb-4 rounded-sm p-3 bg-white"
           />
-          <button
-            type="submit"
-            className="justify-center rounded-full text-white py-2 px-4 bg-blue-500 mb-4 max-w-[13rem] translate-x-[6.5rem]"
-          >
-            Login
-          </button>
+          <button type="submit" className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4">Login</button> 
         </form>
         <p className="text-center text-white pt-10">Don't have an account?</p>
-        <Link to="/signup" className="text-center text-blue-500 hover:underline block">
-          Sign Up
-        </Link>
+        <Link to="/signup" className="text-center text-blue-500 underline block">Sign Up</Link>
       </div>
     </div>
   );
 };
 
 export default LoginForm;
+

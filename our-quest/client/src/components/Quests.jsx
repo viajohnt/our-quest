@@ -157,7 +157,7 @@ function Quest() {
               name="title"
               placeholder="Title"
               value={formQuest.title}
-              className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+              className="input rounded-sm p-3 bg-white w-full"
               required
             />
           </div>
@@ -167,7 +167,7 @@ function Quest() {
               name="content"
               placeholder="Brief description"
               value={formQuest.content}
-              className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+              className="input rounded-sm p-3 bg-white w-full"
               required
             />
           </div>
@@ -177,7 +177,7 @@ function Quest() {
                 onChange={handleChange}
                 name="topic"
                 value={formQuest.topic.toString()}
-                className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                className="input rounded-sm p-3 bg-white w-full"
                 required
               >
                 <option value="">Select a topic</option>
@@ -206,19 +206,19 @@ function Quest() {
                   name="newTopic"
                   placeholder="New Topic"
                   value={newTopicName}
-                  className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                  className="input rounded-sm p-3 bg-white w-full"
                 />
                 <button
                   type="button"
                   onClick={handleCreateTopic}
-                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4 focus:outline-none"
+                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
                 >
                   Submit New Topic
                 </button>
                 <button
                   type="button"
                   onClick={() => setCreatingTopic(false)}
-                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4 focus:outline-none"
+                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
                 >
                   Cancel
                 </button>
@@ -231,7 +231,7 @@ function Quest() {
               onChange={handleChange}
               name="public"
               checked={formQuest.public}
-              className="mr-2 focus:outline-none"
+              className="mr-2"
             />
             <label htmlFor="public" className="text-white">Public</label>
           </div>
