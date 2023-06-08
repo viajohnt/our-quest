@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import logo from "../assets/images/logo.png";
-import userImg from "../assets/images/default-user-img.png";
-import dropdown from "../assets/images/dropdown.png";
-import door from "../assets/images/door.png";
-import gear from "../assets/images/gear.png";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import logo from "../assets/images/logo.png"
+import userImg from "../assets/images/default-user-img.png"
+import dropdown from "../assets/images/dropdown.png"
+import door from "../assets/images/door.png"
+import gear from "../assets/images/gear.png"
+import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../hooks/UserStore";
-import axios from 'axios';
+import axios from 'axios'
 
 function Header() {
-  const [showDropdown, setShowDropdown] = useState(false);
-  const { user, logout } = useUserStore();
+  const [showDropdown, setShowDropdown] = useState(false)
+  const { user, logout } = useUserStore()
+  const navigate = useNavigate() // Initialize useNavigate hook
 
   const handleLogout = async () => {
     const csrftoken = document.cookie
@@ -23,7 +24,8 @@ function Header() {
           'X-CSRFToken': csrftoken
         }
       });
-      logout();
+      logout()
+      navigate('/')
     } catch (error) {
       console.error(error);
     }
@@ -58,7 +60,7 @@ function Header() {
             )}
           </>
         ) : (
-          <Link to="/login" className="login-link text-white font-bold text-lg">LOGIN</Link>
+          <Link to="/login" className="login-link text-white font-bold text-lg rounded-md p-2 ">LOGIN</Link>
         )}
       </div>
     </header>

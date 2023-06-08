@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const [quests, setQuests] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { user, setUser } = useUserStore();
 
   useEffect(() => {
@@ -13,7 +14,7 @@ function Home() {
       getUser(user.id);
     }
   }, []);
-  
+
   function getUser(userId) {
     fetch(`/users/${userId}/`)
       .then((response) => response.json())
@@ -28,8 +29,18 @@ function Home() {
   function getQuests() {
     fetch("/quests/")
       .then((response) => response.json())
-      .then((data) => {
-        setQuests(data);
+      .then((questsData) => {
+        const promises = questsData.map((quest) => 
+          fetch(`/topics/${quest.topic}/`)
+            .then((response) => response.json())
+            .then((topicData) => ({
+              ...quest,
+              topicName: topicData.name,
+            }))
+        );
+        Promise.all(promises).then((quests) => {
+          setQuests(quests);
+        });
       })
       .catch((error) => {
         console.error("Error fetching quests:", error)
@@ -38,7 +49,6 @@ function Home() {
 
   function deleteQuest(id) {
     const csrftoken = getCookie('csrftoken')
-
     fetch(`/quests/${id}/`, {
       method: "DELETE",
       headers: {
@@ -58,21 +68,44 @@ function Home() {
     return cookieValue ? cookieValue.pop() : ''
   }
 
-  return (
-    <div className=" bg-darker-purp">
-      <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10">
-        <div>
-          <p className="text-2xl text-white">Quests</p>
-          <p className="text-blue-300">Available Quests: {quests.length}</p>
+  function handleSearch(e) {
+    setSearchTerm(e.target.value);
+  }
+
+  const filteredQuests = quests
+    .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    return (
+      <div className="bg-darker-purp min-h-screen overflow-x-hidden">
+        <div className="flex justify-center">
+          <input
+            type="text"
+            placeholder="Search quests..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="mt-5 mb-5 bg-light-purp w-[20rem] h-12 text-lg rounded-md text-white focus:outline-none pl-4"
+          />
         </div>
-        <Link to="/create_quest" className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400">Create Quest</Link>
+        <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10 ">
+          <div>
+            <p className="text-2xl text-white">Quests</p>
+            <p className="text-blue-300">Available Quests: {quests.length}</p>
+          </div>
+          <Link to="/create_quest" className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400">Create Quest</Link>
+        </div>
+        <div className="grid grid-rows-8 gap-4 justify-items-center">
+          {filteredQuests.length > 0 ? (
+            filteredQuests.map((quest) => (
+              <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
+            ))
+          ) : (
+            <div className="flex justify-center items-center text-white text-xl">
+              No quests found...
+            </div>
+          )}
+        </div>
       </div>
-      <div className="grid grid-rows-8 gap-4 justify-items-center">
-        {quests.map((quest) => (
-          <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
-        ))}
-      </div>
-    </div>
-)}
+    );
+}
 
 export default Home;

@@ -18,6 +18,14 @@ export default {
         'light-blue': '#6fc1d8',
         'cement': '#b1bcbc'    
       },
+      outline: {
+        none: ['focus'],
+      },
+    },
+  },
+  variants: {
+    extend: {
+      outline: ['focus'],
     },
   },
   plugins: [],
