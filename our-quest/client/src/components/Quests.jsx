@@ -97,12 +97,13 @@ function Quest() {
           "X-CSRFToken": csrftoken,
         },
         body: JSON.stringify({
+          captain_id: user.id, 
           title: formQuest.title,
           content: formQuest.content,
           topic: topicId,
           public: formQuest.public,
           participants: [user.id],
-        }),
+        }),        
       })
         .then(() => {
           setFormQuest({
@@ -118,7 +119,6 @@ function Quest() {
     };
 
     if (newTopicName) {
-      // Create new topic
       fetch("/topics/", {
         method: "POST",
         headers: {
@@ -147,7 +147,7 @@ function Quest() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-500 font-dm-sans pt-10">
+    <div className="flex items-center justify-center h-screen bg-gray-600 font-dm-sans pt-[8rem]">
       <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
         <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">Create Quest</div>
         <form className="create-note" onSubmit={createQuest}>
@@ -157,7 +157,7 @@ function Quest() {
               name="title"
               placeholder="Title"
               value={formQuest.title}
-              className="input rounded-sm p-3 bg-white w-full"
+              className="input rounded-sm p-3 bg-white w-full focus:outline-none"
               required
             />
           </div>
@@ -167,7 +167,7 @@ function Quest() {
               name="content"
               placeholder="Brief description"
               value={formQuest.content}
-              className="input rounded-sm p-3 bg-white w-full"
+              className="input rounded-sm p-3 bg-white w-full focus:outline-none"
               required
             />
           </div>
@@ -177,7 +177,7 @@ function Quest() {
                 onChange={handleChange}
                 name="topic"
                 value={formQuest.topic.toString()}
-                className="input rounded-sm p-3 bg-white w-full"
+                className="input rounded-sm p-3 bg-white w-full focus:outline-none"
                 required
               >
                 <option value="">Select a topic</option>
@@ -206,41 +206,41 @@ function Quest() {
                   name="newTopic"
                   placeholder="New Topic"
                   value={newTopicName}
-                  className="input rounded-sm p-3 bg-white w-full"
+                  className="input rounded-sm p-3 bg-white w-full focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleCreateTopic}
-                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
+                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4 mt-4"
                 >
-                  Submit New Topic
+                  Submit
                 </button>
                 <button
                   type="button"
                   onClick={() => setCreatingTopic(false)}
-                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
+                  className="btn btn-primary rounded-full text-white py-2 px-4 bg-gray-500 mb-4 translate-x-5"
                 >
                   Cancel
                 </button>
               </div>
             )}
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="mb-4 flex items-center translate-x-[10.5rem]">
             <input
               type="checkbox"
               onChange={handleChange}
               name="public"
               checked={formQuest.public}
-              className="mr-2"
+              className="mr-2 focus:outline-none "
             />
-            <label htmlFor="public" className="text-white">Public</label>
+            <label htmlFor="public" className="text-white ">PUBLIC</label>
           </div>
           <button
             type="submit"
-            className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
-          >Create</button>
+            className="btn btn-primary rounded-lg text-white py-2 px-4 bg-light-blue mb-4 translate-x-[10.3rem] font-bold"
+          >SUBMIT</button>
         </form>
-        <Link to="/" className="text-center text-blue-500 underline block">Back to Quests</Link>
+        <Link to="/" className="text-center text-blue-500 hover:underline block">Back to Quests</Link>
       </div>
     </div>
   );  

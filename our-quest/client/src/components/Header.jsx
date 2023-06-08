@@ -11,7 +11,7 @@ import axios from 'axios';
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
   const { user, logout } = useUserStore();
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate(); 
 
   const handleLogout = async () => {
     const csrftoken = document.cookie
@@ -25,7 +25,7 @@ function Header() {
         }
       });
       logout();
-      navigate('/'); // Redirect to the index page after logout
+      navigate('/')
     } catch (error) {
       console.error(error);
     }
@@ -41,7 +41,7 @@ function Header() {
       <div className="relative flex items-center mr-10">
         {user ? (
           <>
-            <img className="user-image max-h-[3rem] rounded-full mr-3" src={user?.profile?.avatar === "/avatar.svg" ? userImg : user?.profile?.avatar} alt="User" />
+            <img className="user-image max-h-[3rem] rounded-full mr-3" src={user?.profile?.avatar === "avatars/avatar.svg" ? userImg : user?.profile?.avatar} alt="User" />
             <p className="font-bold font-dm-sans text-blue-200">@{user.username}</p>
             <button onClick={() => setShowDropdown(!showDropdown)} className="font-bold ml-3">
               <img src={dropdown} alt="dropdown" className="h-5 w-5"/>
@@ -60,7 +60,7 @@ function Header() {
             )}
           </>
         ) : (
-          <Link to="/login" className="login-link text-white font-bold text-lg">LOGIN</Link>
+          <Link to="/login" className="login-link text-white font-bold text-lg hover:underline">LOGIN</Link>
         )}
       </div>
     </header>
