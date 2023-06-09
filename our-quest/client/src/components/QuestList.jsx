@@ -1,28 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 function QuestList({ quest, deletion }) {
-  const [topicData, setTopicData] = useState(null);
+  const [topicData, setTopicData] = useState(null)
 
   const getTopic = (id) => {
     fetch(`/topics/${id}/`)
       .then((response) => response.json())
       .then((data) => {
-        setTopicData(data);
-      });
-  };
+        setTopicData(data)
+      })
+  }
 
   useEffect(() => {
-    getTopic(quest.topic);
-  }, [quest.topic]);
-
-
+    getTopic(quest.topic)
+  }, [quest.topic])
 
   return (
     <div className="flex justify-center">
       <div className="quest mx-auto w-[36rem] rounded-lg bg-dark-purp text-cement p-4 mb-4 font-dm-sans font-bold">
         <div className="flex items-center">
-        <img
+          <img
             className="h-8 w-8 rounded-full mr-4"
             src={quest.captain.profile.avatar}
             alt={quest.captain.username}
@@ -53,11 +51,11 @@ function QuestList({ quest, deletion }) {
           </div>
         </div>
         <button onClick={() => deletion(quest.id)} className="mt-4">
-          
+          Delete
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default QuestList;
+export default QuestList

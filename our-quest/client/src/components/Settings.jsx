@@ -1,65 +1,63 @@
-import React, { useState, useEffect } from "react";
-import useUserStore from "../hooks/UserStore";
+import React, { useState, useEffect } from "react"
+import useUserStore from "../hooks/UserStore"
 
 function Settings() {
-  const { user, setUser } = useUserStore();
+  const { user, setUser } = useUserStore()
   const [userData, setUserData] = useState({
     avatar: user?.profile?.avatar,
     bio: user?.profile?.bio || '',
-  });
+  })
 
   useEffect(() => {
     if (user && user.id) {
-      getUser(user.id);
+      getUser(user.id)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
 
   function getUser(userId) {
     fetch(`/users/${userId}/`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
+      .then(response => response.json())
+      .then(data => {
+        setUser(data)
         setUserData({
           avatar: data.profile?.avatar,
           bio: data.profile?.bio || '',
-        });
+        })
       })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
+      .catch(error => {})
   }
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     if (event.target.name === "avatar") {
       setUserData({
         ...userData,
         [event.target.name]: event.target.files[0],
-      });
+      })
     } else {
       setUserData({
         ...userData,
         [event.target.name]: event.target.value,
-      });
+      })
     }
-  };
+  }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    updateUser(user.id, userData);
-  };
+  const handleSubmit = event => {
+    event.preventDefault()
+    updateUser(user.id, userData)
+  }
 
   function updateUser(userId, userData) {
-    const csrftoken = getCookie("csrftoken");
-    let formData = new FormData();
+    const csrftoken = getCookie("csrftoken")
+    let formData = new FormData()
     for (let name in userData) {
-      formData.append(name, userData[name]);
+      formData.append(name, userData[name])
     }
     fetch(`/profile/${userId}/`, {
       method: "PATCH",
@@ -68,28 +66,25 @@ function Settings() {
       },
       body: formData,
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
+      .then(response => response.json())
+      .then(data => {
+        setUser(data)
         if (data.profile) {
-          setUserData((prevState) => ({
+          setUserData(prevState => ({
             ...prevState,
             avatar: userData.avatar,
             bio: data.profile.bio,
-          }));
+          }))
         }
       })
-      .catch((error) => {
-        console.error("Error updating user:", error);
-      });
+      .catch(error => {})
   }
 
   function getCookie(name) {
-    const cookieValue = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
-    return cookieValue ? cookieValue.pop() : "";
+    const cookieValue = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")
+    return cookieValue ? cookieValue.pop() : ""
   }
 
-  console.log(userData);
   return (
     <div className="flex items-center justify-center h-screen bg-darker-purp font-dm-sans pt-10">
       <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
@@ -114,7 +109,7 @@ function Settings() {
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default Settings;
+export default Settings

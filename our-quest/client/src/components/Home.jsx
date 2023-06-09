@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from "react";
-import QuestList from "./QuestList";
-import TopicList from "./TopicList";
-import useUserStore from "../hooks/UserStore";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import QuestList from "./QuestList"
+import TopicList from "./TopicList"
+import CaptainList from "./CaptainList"
+import useUserStore from "../hooks/UserStore"
+import { Link } from "react-router-dom"
 
 function Home() {
-  const [quests, setQuests] = useState([]);
-  const [topics, setTopics] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentTopic, setCurrentTopic] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const questsPerPage = 8;
-  const { user, setUser } = useUserStore();
+  const [quests, setQuests] = useState([])
+  const [topics, setTopics] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentTopic, setCurrentTopic] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [captains, setCaptains] = useState([])
+  const questsPerPage = 8
+  const { user, setUser } = useUserStore()
 
   useEffect(() => {
-    getQuests();
-    getTopics();
+    getQuests()
+    getTopics()
     if (user && user.id) {
-      getUser(user.id);
+      getUser(user.id)
     }
-  }, []);
+  }, [])
 
   function getUser(userId) {
     fetch(`/users/${userId}/`)
@@ -32,9 +34,6 @@ function Home() {
       })
   }
 
-  console.log(topics)
-  console.log(quests)
-
   function getQuests() {
     fetch("/quests/")
       .then((response) => response.json())
@@ -46,27 +45,25 @@ function Home() {
               ...quest,
               topicName: topicData.name,
             }))
-        );
+        )
         Promise.all(promises).then((quests) => {
-          setQuests(quests);
-        });
+          setQuests(quests)
+        })
       })
       .catch((error) => {
         console.error("Error fetching quests:", error)
-      });
+      })
   }
 
   function getTopics() {
     fetch("/topics/")
       .then((response) => response.json())
-      .then((topicsData) => {
-        console.log(topicsData);
-        
-        setTopics(topicsData);
+      .then((topicsData) => {        
+        setTopics(topicsData)
       })
       .catch((error) => {
         console.error("Error fetching topics:", error)
-      });
+      })
   }
 
   function deleteQuest(id) {
@@ -91,25 +88,32 @@ function Home() {
   }
 
   function handleSearch(e) {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value)
   }
 
   const getCurrentQuests = () => {
-    const indexOfLastQuest = currentPage * questsPerPage;
-    const indexOfFirstQuest = indexOfLastQuest - questsPerPage;
-    return filteredQuests.slice(indexOfFirstQuest, indexOfLastQuest);
-};
+    const indexOfLastQuest = currentPage * questsPerPage
+    const indexOfFirstQuest = indexOfLastQuest - questsPerPage
+    return filteredQuests.slice(indexOfFirstQuest, indexOfLastQuest)
+  }
+
+  useEffect(() => {
+    if (quests.length > 0) {
+      const uniqueCaptains = [...new Map(quests.map(quest => [quest.captain.id, quest.captain])).values()]
+      setCaptains(uniqueCaptains)
+    }
+  }, [quests])
 
   const filteredQuests = quests
-      .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()))
-      .filter(quest => currentTopic ? quest.topicName.toLowerCase() === currentTopic.toLowerCase() : true);
+    .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(quest => currentTopic ? quest.topicName.toLowerCase() === currentTopic.toLowerCase() : true)
 
-  const totalPages = Math.ceil(quests.length / questsPerPage);
+  const totalPages = Math.ceil(quests.length / questsPerPage)
 
   const changePage = (newPage) => {
-    setCurrentPage(newPage);
-    window.scrollTo(0, 0);
-  };
+    setCurrentPage(newPage)
+    window.scrollTo(0, 0)
+  }
 
   return (
     <div className="bg-darker-purp min-h-screen overflow-x-hidden">
@@ -174,10 +178,12 @@ function Home() {
             )}
           </div>
         </div>
+        <div className="w-1/5 p-4 ml-20">
+          <CaptainList captains={captains} />
+        </div>
       </div>
     </div>
-  );
-  
+  )
 }
 
-export default Home;
+export default Home

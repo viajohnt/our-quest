@@ -19,8 +19,8 @@ export default function App() {
           <Outlet />
         </div>
       </>
-    );
-  };
+    )
+  }
   
   const router = createBrowserRouter(
     createRoutesFromElements(
