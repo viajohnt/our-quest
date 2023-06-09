@@ -3,10 +3,15 @@ from .models import Quest, User, Topic, Comment, Profile
 
 class TopicSerializer(serializers.ModelSerializer):
     captain = serializers.ReadOnlyField(source='captain.username')
+    questCount = serializers.SerializerMethodField()
 
     class Meta:
         model = Topic
-        fields = '__all__'
+        fields = ['id', 'name', 'captain', 'questCount']
+
+    def get_questCount(self, obj):
+        return obj.quest_set.count()
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(allow_null=True, required=False)
