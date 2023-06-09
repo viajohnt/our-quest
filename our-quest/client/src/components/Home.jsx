@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react"
-import QuestList from "./QuestList"
-import useUserStore from "../hooks/UserStore"
+import React, { useState, useEffect } from "react";
+import QuestList from "./QuestList";
+import useUserStore from "../hooks/UserStore";
 import { Link } from "react-router-dom";
 
 function Home() {
   const [quests, setQuests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const questsPerPage = 8;
   const { user, setUser } = useUserStore();
 
   useEffect(() => {
@@ -72,8 +74,21 @@ function Home() {
     setSearchTerm(e.target.value);
   }
 
+  function getCurrentQuests() {
+    const indexOfLastQuest = currentPage * questsPerPage;
+    const indexOfFirstQuest = indexOfLastQuest - questsPerPage;
+    return quests.slice(indexOfFirstQuest, indexOfLastQuest);
+  }
+
   const filteredQuests = quests
     .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const totalPages = Math.ceil(quests.length / questsPerPage);
+
+  const changePage = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="bg-darker-purp min-h-screen overflow-x-hidden">
@@ -95,7 +110,7 @@ function Home() {
       </div>
       <div className="grid grid-rows-8 gap-4 justify-items-center">
         {filteredQuests.length > 0 ? (
-          filteredQuests.map((quest) => (
+          getCurrentQuests().map((quest) => (
             <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
           ))
         ) : (
@@ -104,10 +119,24 @@ function Home() {
           </div>
         )}
       </div>
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages <= 7 ? totalPages : 7)].map((e, i) => (
+          <button
+            key={i + 1}
+            onClick={() => changePage(i + 1)}
+            className={`mr-2 py-1 px-3 rounded mb-[5rem] mt-[3rem] ${currentPage === i + 1 ? 'bg-light-purp text-white hover:text-blue-400' : 'bg-light-purp text-white hover:text-blue-400'}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        {totalPages > 7 && (
+          <button onClick={() => changePage(currentPage + 1)} className="py-1 px-3 rounded bg-light-purp text-white">
+            Next
+          </button>
+        )}
+      </div>
     </div>
   );
 }
-
-
 
 export default Home;
