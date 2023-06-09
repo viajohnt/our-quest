@@ -7,7 +7,7 @@ function CaptainList({ captains, followCaptain }) {
         Top Captains
       </div>
       <div className="p-4 text-cement bg-dark-purp rounded-md">
-        {captains.slice(0, 5).map(({ id, username, profile: { avatar } }) => (
+        {captains.slice(0, 7).map(({ id, username, profile: { avatar } }) => (
           <div key={id} className="flex items-center justify-between mt-8">
             <div>
               <img src={avatar} alt={username} className="w-10 h-10 rounded-full" />

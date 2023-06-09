@@ -65,6 +65,7 @@ function QuestDetail() {
   }
 
   const timeDifference = getTimeDifference(quest.created_at)
+  let reversedComments = [...quest.comments].reverse()
 
   return (
     <div className="flex items-center justify-center bg-darker-purp min-h-screen overflow-x-hidden pb-20 font-dm-sans">
@@ -76,7 +77,7 @@ function QuestDetail() {
           <p className="text-sky-blue mb-4">@{quest.captain.username}</p>
 
           <h2 className="text-xl text-white pt-[24rem]"></h2>
-          {quest.comments.map((comment, index) => (
+          {reversedComments.map((comment, index) => (
             <div key={index} className="bg-sky-blue rounded-full p-3 mb-4">
               <p>@{comment.user.username}: {comment.body}</p>
             </div>

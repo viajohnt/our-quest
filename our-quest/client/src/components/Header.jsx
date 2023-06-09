@@ -41,7 +41,7 @@ function Header() {
       <div className="relative flex items-center mr-10">
         {user ? (
           <>
-            <img className="user-image max-h-[3rem] rounded-full mr-3" src={user?.profile?.avatar === "avatars/avatar.svg" ? userImg : user?.profile?.avatar} alt="User" />
+            <img className="user-image rounded-full mr-3 object-cover w-12 h-12" src={user?.profile?.avatar === "avatars/avatar.svg" ? userImg : user?.profile?.avatar} alt="User" />
             <p className="font-bold font-dm-sans text-blue-200">@{user.username}</p>
             <button onClick={() => setShowDropdown(!showDropdown)} className="font-bold ml-3">
               <img src={dropdown} alt="dropdown" className="h-5 w-5" />
