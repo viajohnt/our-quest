@@ -8,9 +8,9 @@ import Home from "./Home"
 import LoginForm from './LoginForm'
 import SignUpForm from './SignUpForm'
 import Settings from './Settings'
+import QuestDetail from './QuestDetail'
 
 export default function App() {
-
   const Root = () => {
     return (
       <>
@@ -19,8 +19,8 @@ export default function App() {
           <Outlet />
         </div>
       </>
-    );
-  };
+    )
+  }
   
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +30,7 @@ export default function App() {
         <Route path="/login" element ={<LoginForm />}/>
         <Route path="/signup" element ={<SignUpForm />}/>
         <Route path="/settings" element ={<Settings />}/>
+        <Route path="/quest/:id" element ={<QuestDetail />}/>
         <Route path="*" element={<ErrorPage/>}/>
       </Route>
     )

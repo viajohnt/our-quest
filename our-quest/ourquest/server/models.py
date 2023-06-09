@@ -18,6 +18,9 @@ class Quest(models.Model):
     public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def get_comments(self):
+        return Comment.objects.filter(quest=self)
 
     def __str__(self):
         return self.title
