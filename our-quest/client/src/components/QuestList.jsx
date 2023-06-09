@@ -53,7 +53,7 @@ function QuestList({ quest, deletion }) {
           </div>
         </div>
         <button onClick={() => deletion(quest.id)} className="mt-4">
-          
+          Delete
         </button>
       </div>
     </div>

@@ -24,6 +24,8 @@ function QuestDetail() {
       })
   }
 
+  console.log("quest", quest)
+
   useEffect(() => {
     fetch(`/quests/${id}/`)
       .then((response) => response.json())
@@ -82,7 +84,7 @@ function QuestDetail() {
 
           <h2 className="text-xl text-white pt-[24rem]"></h2>
           {quest.comments.map((comment, index) => (
-            <div key={index} className="bg-white rounded-sm p-3 mb-4">
+            <div key={index} className="bg-sky-blue rounded-full p-3 mb-4">
               <p>@{comment.user.username}: {comment.body}</p>
             </div>
           ))}

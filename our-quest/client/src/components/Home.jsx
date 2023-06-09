@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import QuestList from "./QuestList";
 import TopicList from "./TopicList";
+import CaptainList from "./CaptainList";
 import useUserStore from "../hooks/UserStore";
 import { Link } from "react-router-dom";
 
@@ -10,6 +11,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTopic, setCurrentTopic] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [captains, setCaptains] = useState([]);
   const questsPerPage = 8;
   const { user, setUser } = useUserStore();
 
@@ -31,9 +33,6 @@ function Home() {
         console.error("Error fetching user:", error)
       })
   }
-
-  console.log(topics)
-  console.log(quests)
 
   function getQuests() {
     fetch("/quests/")
@@ -59,9 +58,7 @@ function Home() {
   function getTopics() {
     fetch("/topics/")
       .then((response) => response.json())
-      .then((topicsData) => {
-        console.log(topicsData);
-        
+      .then((topicsData) => {        
         setTopics(topicsData);
       })
       .catch((error) => {
@@ -94,89 +91,100 @@ function Home() {
     setSearchTerm(e.target.value);
   }
 
-  const getCurrentQuests = () => {
-    const indexOfLastQuest = currentPage * questsPerPage;
-    const indexOfFirstQuest = indexOfLastQuest - questsPerPage;
-    return filteredQuests.slice(indexOfFirstQuest, indexOfLastQuest);
+const getCurrentQuests = () => {
+  const indexOfLastQuest = currentPage * questsPerPage;
+  const indexOfFirstQuest = indexOfLastQuest - questsPerPage;
+  return filteredQuests.slice(indexOfFirstQuest, indexOfLastQuest);
 };
 
-  const filteredQuests = quests
-      .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()))
-      .filter(quest => currentTopic ? quest.topicName.toLowerCase() === currentTopic.toLowerCase() : true);
+useEffect(() => {
+  if (quests.length > 0) {
+    const uniqueCaptains = [...new Map(quests.map(quest => [quest.captain.id, quest.captain])).values()];
+    setCaptains(uniqueCaptains);
+  }
+}, [quests]);
 
-  const totalPages = Math.ceil(quests.length / questsPerPage);
 
-  const changePage = (newPage) => {
-    setCurrentPage(newPage);
-    window.scrollTo(0, 0);
-  };
+const filteredQuests = quests
+    .filter(quest => quest.topicName.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(quest => currentTopic ? quest.topicName.toLowerCase() === currentTopic.toLowerCase() : true);
 
-  return (
-    <div className="bg-darker-purp min-h-screen overflow-x-hidden">
-      <div className="flex">
-        <div className="w-1/5 p-4 ml-20">
-          <TopicList topics={topics} setCurrentTopic={setCurrentTopic} />
+const totalPages = Math.ceil(quests.length / questsPerPage);
+
+const changePage = (newPage) => {
+  setCurrentPage(newPage);
+  window.scrollTo(0, 0);
+};
+
+return (
+  <div className="bg-darker-purp min-h-screen overflow-x-hidden">
+    <div className="flex">
+      <div className="w-1/5 p-4 ml-20">
+        <TopicList topics={topics} setCurrentTopic={setCurrentTopic} />
+      </div>
+      <div className="w-2/4">
+        <div className="flex justify-center">
+          <input
+            type="text"
+            placeholder="Search by topic..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="mt-5 mb-5 bg-light-purp w-[20rem] h-12 text-lg rounded-md text-white focus:outline-none pl-4"
+          />
         </div>
-        <div className="w-2/4">
-          <div className="flex justify-center">
-            <input
-              type="text"
-              placeholder="Search by topic..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="mt-5 mb-5 bg-light-purp w-[20rem] h-12 text-lg rounded-md text-white focus:outline-none pl-4"
-            />
+        <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10">
+          <div>
+            <p className="text-2xl text-white">Quests</p>
+            <p className="text-blue-300">Available Quests: {quests.length}</p>
           </div>
-          <div className="flex justify-between items-center w-[36rem] mx-auto mb-10 pt-10">
-            <div>
-              <p className="text-2xl text-white">Quests</p>
-              <p className="text-blue-300">Available Quests: {quests.length}</p>
+          <Link
+            to="/create_quest"
+            className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400"
+          >
+            Create Quest
+          </Link>
+        </div>
+        <div className="grid grid-rows-8 gap-4 justify-items-center">
+          {filteredQuests.length > 0 ? (
+            getCurrentQuests().map((quest) => (
+              <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
+            ))
+          ) : (
+            <div className="flex justify-center items-center text-white text-xl">
+              No quests found...
             </div>
-            <Link
-              to="/create_quest"
-              className="btn btn-primary rounded-md text-white py-2 px-4 bg-blue-400"
+          )}
+        </div>
+        <div className="flex justify-center mt-4">
+          {[...Array(totalPages <= 7 ? totalPages : 7)].map((e, i) => (
+            <button
+              key={i + 1}
+              onClick={() => changePage(i + 1)}
+              className={`mr-2 py-1 px-3 rounded mb-[5rem] mt-[3rem] ${
+                currentPage === i + 1
+                  ? 'bg-light-purp text-white hover:text-blue-400'
+                  : 'bg-light-purp text-white hover:text-blue-400'
+              }`}
             >
-              Create Quest
-            </Link>
-          </div>
-          <div className="grid grid-rows-8 gap-4 justify-items-center">
-            {filteredQuests.length > 0 ? (
-              getCurrentQuests().map((quest) => (
-                <QuestList key={quest.id} quest={quest} deletion={deleteQuest} />
-              ))
-            ) : (
-              <div className="flex justify-center items-center text-white text-xl">
-                No quests found...
-              </div>
-            )}
-          </div>
-          <div className="flex justify-center mt-4">
-            {[...Array(totalPages <= 7 ? totalPages : 7)].map((e, i) => (
-              <button
-                key={i + 1}
-                onClick={() => changePage(i + 1)}
-                className={`mr-2 py-1 px-3 rounded mb-[5rem] mt-[3rem] ${
-                  currentPage === i + 1
-                    ? 'bg-light-purp text-white hover:text-blue-400'
-                    : 'bg-light-purp text-white hover:text-blue-400'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-            {totalPages > 7 && (
-              <button
-                onClick={() => changePage(currentPage + 1)}
-                className="py-1 px-3 rounded bg-light-purp text-white"
-              >
-                Next
-              </button>
-            )}
-          </div>
+              {i + 1}
+            </button>
+          ))}
+          {totalPages > 7 && (
+            <button
+              onClick={() => changePage(currentPage + 1)}
+              className="py-1 px-3 rounded bg-light-purp text-white"
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
+      <div className="w-1/5 p-4 ml-20">
+        <CaptainList captains={captains}/>
+      </div>
     </div>
-  );
+  </div>
+);
   
 }
 
