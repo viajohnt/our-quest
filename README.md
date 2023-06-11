@@ -6,7 +6,7 @@
 2. [Features](#Features)
 3. [Tech Stack](#Tech-Stack)
 4. [Getting Started](#Getting-Started)
-6. [Contact Information](#Contact-Information)
+5. [Contact Information](#Contact-Information)
 
 ## Introduction
 
