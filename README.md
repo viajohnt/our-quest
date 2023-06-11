@@ -6,7 +6,6 @@
 2. [Features](#Features)
 3. [Tech Stack](#Tech-Stack)
 4. [Getting Started](#Getting-Started)
-5. [Contributing](#Contributing)
 6. [Contact Information](#Contact-Information)
 
 ## Introduction
@@ -25,13 +24,13 @@ OurQuest is more than just a goal tracker. It's a community where users can crea
 
 ## Tech Stack
 
-* Add the technologies used for the project here
+Python, Django, Pillow, SQL, Javascript, React, Zustand
 
 ## Getting Started
 
 ### Pre-requisites
 
-* List any pre-requisites or installations needed here
+Windows or Mac
 
 ### How to Run Locally
 
@@ -59,16 +58,10 @@ OurQuest is more than just a goal tracker. It's a community where users can crea
     ```
 8. Open your preferred web browser and enter the local host address provided in the terminal. Enjoy exploring OurQuest!
 
-## Contributing
-
-If you're interested in contributing to this project, we'd love to have you! Please read our [contributing guidelines](link-to-guidelines) and feel free to submit a pull request.
-
 ## Contact Information
 
 For any additional questions or comments, please contact:
 
-- [Your Name](your-email@email.com)
-- [LinkedIn](your-linkedin-profile-link)
-- [GitHub](your-github-profile-link)
-
-Thank you for visiting the OurQuest repository! Your journey begins here. Happy questing!
+- [Your Name](viajohnt@gmail.com)
+- [LinkedIn](https://www.linkedin.com/in/viajohnt/)
+- [GitHub]([your-github-profile-link](https://github.com/viajohnt))
