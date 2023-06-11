@@ -28,7 +28,7 @@ function QuestList({ quest, deletion }) {
           <h2 className="text-light-blue">Captain @{quest.captain.username}</h2>
         </div>
         <Link to={`/quest/${quest.id}`}>
-          <h2 className="mt-2 mb-4 text-white">{quest.title}</h2>
+          <h2 className="mt-2 mb-4 text-white hover:underline">{quest.title}</h2>
         </Link>
         <div className="flex space-x-2 mb-4">
           {quest.participants.slice(0, 3).map((participant, index) => (
@@ -50,7 +50,7 @@ function QuestList({ quest, deletion }) {
             <p>Topic: {topicData ? topicData.name : "Loading..."}</p>
           </div>
         </div>
-        <button onClick={() => deletion(quest.id)} className="mt-4">
+        <button onClick={() => deletion(quest.id)} className="mt-4 hover:text-red-500">
           Delete
         </button>
       </div>

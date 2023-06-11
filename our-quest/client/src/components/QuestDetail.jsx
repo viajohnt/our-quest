@@ -78,7 +78,7 @@ function QuestDetail() {
 
           <h2 className="text-xl text-white pt-[24rem]"></h2>
           {reversedComments.map((comment, index) => (
-            <div key={index} className="bg-sky-blue rounded-full p-3 mb-4">
+            <div key={index} className="bg-light-purp rounded-full p-3 mb-4 text-white">
               <p>@{comment.user.username}: {comment.body}</p>
             </div>
           ))}

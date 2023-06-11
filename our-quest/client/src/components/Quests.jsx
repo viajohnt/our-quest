@@ -149,101 +149,110 @@ function Quest() {
 return (
   <div className="flex items-center justify-center h-screen bg-gray-600 font-dm-sans pt-[8rem]">
     <div className="bg-gray-700 rounded-lg shadow-lg p-12 w-full max-w-lg translate-y-[-8rem]">
-      <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">Create Quest</div>
-      <form className="create-note" onSubmit={createQuest}>
-        <div className="mb-4">
-          <input
-            onChange={handleChange}
-            name="title"
-            placeholder="Title"
-            value={formQuest.title}
-            className="input rounded-sm p-3 bg-white w-full focus:outline-none"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            onChange={handleChange}
-            name="content"
-            placeholder="Brief description"
-            value={formQuest.content}
-            className="input rounded-sm p-3 bg-white w-full focus:outline-none"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          {topicOptions.length > 0 ? (
-            <select
-              onChange={handleChange}
-              name="topic"
-              value={formQuest.topic.toString()}
-              className="input rounded-sm p-3 bg-white w-full focus:outline-none"
-              required
-            >
-              <option value="">Select a topic</option>
-              {topicOptions.map((topic) => (
-                <option key={topic.id} value={topic.id.toString()}>
-                  {topic.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-             <p>Loading topics...</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <button
-            type="button"
-            onClick={() => setCreatingTopic(true)}
-            className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
-          >
-            Create New Topic
-          </button>
-          {creatingTopic && (
-            <div>
+      {user ? (
+        <>
+          <div className="text-3xl text-center text-white mb-10 pt-2 rounded-t-lg font-bold">Create Quest</div>
+          <form className="create-note" onSubmit={createQuest}>
+            <div className="mb-4">
               <input
-                onChange={handleNewTopicChange}
-                name="newTopic"
-                placeholder="New Topic"
-                value={newTopicName}
+                onChange={handleChange}
+                name="title"
+                placeholder="Title"
+                value={formQuest.title}
                 className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                required
               />
-              <button
-                type="button"
-                onClick={handleCreateTopic}
-                className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4 mt-4"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={() => setCreatingTopic(false)}
-                className="btn btn-primary rounded-full text-white py-2 px-4 bg-gray-500 mb-4 translate-x-5"
-              >
-                Cancel
-              </button>
             </div>
-          )}
+            <div className="mb-4">
+              <input
+                onChange={handleChange}
+                name="content"
+                placeholder="Brief description"
+                value={formQuest.content}
+                className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              {topicOptions.length > 0 ? (
+                <select
+                  onChange={handleChange}
+                  name="topic"
+                  value={formQuest.topic.toString()}
+                  className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                  required
+                >
+                  <option value="">Select a topic</option>
+                  {topicOptions.map((topic) => (
+                    <option key={topic.id} value={topic.id.toString()}>
+                      {topic.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p>Loading topics...</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <button
+                type="button"
+                onClick={() => setCreatingTopic(true)}
+                className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4"
+              >
+                Create New Topic
+              </button>
+              {creatingTopic && (
+                <div>
+                  <input
+                    onChange={handleNewTopicChange}
+                    name="newTopic"
+                    placeholder="New Topic"
+                    value={newTopicName}
+                    className="input rounded-sm p-3 bg-white w-full focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCreateTopic}
+                    className="btn btn-primary rounded-full text-white py-2 px-4 bg-blue-500 mb-4 mt-4"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCreatingTopic(false)}
+                    className="btn btn-primary rounded-full text-white py-2 px-4 bg-gray-500 mb-4 translate-x-5"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="mb-4 flex items-center translate-x-[10.5rem]">
+              <input
+                type="checkbox"
+                onChange={handleChange}
+                name="public"
+                checked={formQuest.public}
+                className="mr-2 focus:outline-none"
+              />
+              <label htmlFor="public" className="text-white ">PUBLIC</label>
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary rounded-lg text-white py-2 px-4 bg-light-blue mb-4 translate-x-[10.3rem] font-bold"
+            >SUBMIT</button>
+          </form>
+          <Link to="/" className="text-center text-blue-500 hover:underline block">Back to Quests</Link>
+        </>
+      ) : (
+        <div className="text-3xl text-center text-red-500 mb-10 pt-2 rounded-t-lg font-bold">
+          You must be signed in to create a quest
         </div>
-        <div className="mb-4 flex items-center translate-x-[10.5rem]">
-          <input
-            type="checkbox"
-            onChange={handleChange}
-            name="public"
-            checked={formQuest.public}
-            className="mr-2 focus:outline-none"
-          />
-          <label htmlFor="public" className="text-white ">PUBLIC</label>
-        </div>
-        <button
-          type="submit"
-          className="btn btn-primary rounded-lg text-white py-2 px-4 bg-light-blue mb-4 translate-x-[10.3rem] font-bold"
-        >SUBMIT</button>
-      </form>
-      <Link to="/" className="text-center text-blue-500 hover:underline block">Back to Quests</Link>
+      )}
     </div>
   </div>
-  )  
+)
+
 }
 
 export default Quest
